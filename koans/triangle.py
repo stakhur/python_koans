@@ -17,8 +17,17 @@
 #   about_triangle_project_2.py
 #
 def triangle(a, b, c):
-    # DELETE 'PASS' AND WRITE THIS CODE
-    pass
+    ret = 'equilateral'
+    if a == b == c:
+        ret = 'equilateral'
+    elif (a == b) or (a == c) or (b == c):
+        ret = 'isosceles'
+    else:
+        ret = 'scalene'
+
+    return ret
+    
+    
 
 # Error class used in part 2.  No need to change this code.
 class TriangleError(Exception):
