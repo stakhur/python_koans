@@ -23,6 +23,7 @@ class Proxy:
         # WRITE CODE HERE
         self._number_of_times_called = {}
 
+
         #initialize '_obj' attribute last. Trust me on this!
         self._obj = target_object
 
@@ -40,21 +41,31 @@ class Proxy:
         return property in self._number_of_times_called
     
 
+    def messages(self):
+        return list(self._number_of_times_called.keys())
+    
+
+    def _update_num_of_times_called(self, name):
+        if name not in self._number_of_times_called:
+            self._number_of_times_called[name] = 0
+
+        self._number_of_times_called[name] += 1
+    
+
     def __setattr__(self, name, value):
-        if (name not in ("_number_of_times_called", "_obj")):
+        if (name not in ("_number_of_times_called", "_obj", "_update_num_of_times_called")):
+            self._update_num_of_times_called(name)
             self._obj.__setattr__(name, value)
+        else:
+            super().__setattr__(name, value)
 
 
-    # def __getattribute__(self, name):
-    #     try:
-    #         obj = self._obj.__getattribute__(name)
-    #         if name not in self._number_of_times_called:
-    #             self.number_of_times_called[name] = 0
-
-    #         self._number_of_times_called[name] += 1
-    #         return obj
-    #     except:
-    #         raise AttributeError
+    def __getattr__(self, attr_name):
+        if (attr_name not in ("_number_of_times_called", "_obj", "number_of_times_called", "was_called", "messages", "_update_num_of_times_called")):
+            self._update_num_of_times_called(attr_name)
+            return self._obj.__getattribute__(attr_name)
+        else:
+            return object.__getattr__(attr_name)
 
 
 # The proxy object should pass the following Koan:
